@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join the CKN Coaching Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#090909;--dark:#111;--card:#161616;--border:#252525;--gold:#C4973A;--gold-light:#E2B560;--offwhite:#F0EBE1;--muted:#6A6460;--text:#D8D2C8;--red:#c44a3a}
+body{background:var(--black);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.7;min-height:100vh;display:flex;flex-direction:column}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.12em;color:var(--offwhite);text-decoration:none}
+.nav-logo span{color:var(--gold)}
+.nav-back{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.nav-back:hover{color:var(--offwhite)}
+.page{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 1.5rem}
+.container{width:100%;max-width:480px}
+.heading{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:600;color:var(--offwhite);line-height:1.1;margin-bottom:0.5rem}
+.heading em{font-style:italic;color:var(--gold)}
+.subheading{font-size:0.88rem;color:var(--muted);margin-bottom:2rem;line-height:1.7}
+.price-badge{display:inline-flex;align-items:center;gap:0.8rem;background:var(--card);border:1px solid var(--border);padding:0.8rem 1.2rem;margin-bottom:2rem}
+.price-badge .amount{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--offwhite);letter-spacing:0.05em}
+.price-badge .per{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+.price-badge .perks{font-size:0.7rem;color:var(--muted);border-left:1px solid var(--border);padding-left:0.8rem}
+.step{display:none}
+.step.active{display:block}
+.step-indicator{display:flex;gap:0.5rem;margin-bottom:2rem}
+.step-dot{height:2px;flex:1;background:var(--border);transition:background 0.3s}
+.step-dot.active{background:var(--gold)}
+.step-dot.done{background:var(--gold)}
+label{display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;margin-top:1.2rem}
+label:first-of-type{margin-top:0}
+input,select{width:100%;background:var(--card);border:1px solid var(--border);color:var(--offwhite);padding:0.85rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:300;outline:none;transition:border-color 0.2s;-webkit-appearance:none}
+input:focus,select:focus{border-color:var(--gold)}
+input::placeholder{color:var(--muted)}
+.btn{width:100%;background:var(--gold);color:var(--black);border:none;font-family:'DM Sans',sans-serif;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;padding:1rem;cursor:pointer;margin-top:1.5rem;transition:background 0.2s}
+.btn:hover{background:var(--gold-light)}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.btn-outline{background:none;color:var(--muted);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--muted);color:var(--text);background:none}
+.error{font-size:0.8rem;color:var(--red);margin-top:0.5rem;display:none}
+.error.show{display:block}
+.success-icon{font-size:3rem;margin-bottom:1rem;text-align:center}
+.divider{display:flex;align-items:center;gap:1rem;margin:1.5rem 0;color:var(--muted);font-size:0.75rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.terms{font-size:0.72rem;color:var(--muted);margin-top:1rem;line-height:1.6;text-align:center}
+.terms a{color:var(--gold);text-decoration:none}
+.loading{display:none;text-align:center;padding:2rem}
+.loading.show{display:block}
+.spinner{width:2rem;height:2rem;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.role-grid{display:grid;grid-template-columns:1fr;gap:0.5rem;margin-top:0}
+.role-option{border:1px solid var(--border);padding:1.2rem;cursor:pointer;transition:border-color 0.2s,background 0.2s;display:flex;align-items:flex-start;gap:1rem}
+.role-option:hover{border-color:rgba(196,151,58,0.4);background:var(--card)}
+.role-option.selected{border-color:var(--gold);background:var(--card)}
+.role-option input[type=radio]{display:none}
+.role-icon{font-size:1.4rem;flex-shrink:0;padding-top:0.1rem}
+.role-text h4{font-size:0.88rem;color:var(--offwhite);font-weight:400;margin-bottom:0.2rem}
+.role-text p{font-size:0.75rem;color:var(--muted);line-height:1.5}
+.secure-badge{display:flex;align-items:center;gap:0.5rem;justify-content:center;margin-top:1rem;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">CKN <span>Hub</span></a>
+  <a href="index.html" class="nav-back">← Back</a>
+</nav>
+
+<div class="page">
+  <div class="container">
+
+    <!-- STEP 1: ACCOUNT -->
+    <div class="step active" id="step-1">
+      <div class="step-indicator">
+        <div class="step-dot active" id="dot-1"></div>
+        <div class="step-dot" id="dot-2"></div>
+        <div class="step-dot" id="dot-3"></div>
+      </div>
+      <h1 class="heading">Create your <em>account.</em></h1>
+      <p class="subheading">Step 1 of 3 — Your details</p>
+      <div class="price-badge">
+        <div><div class="amount">£9.99</div><div class="per">Per month</div></div>
+        <div class="perks">Full access · Cancel anytime<br>No contracts · Instant access</div>
+      </div>
+      <label>First Name</label>
+      <input type="text" id="firstname" placeholder="Your first name" autocomplete="given-name">
+      <label>Email Address</label>
+      <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Min. 8 characters" autocomplete="new-password">
+      <div class="error" id="step1-error"></div>
+      <button class="btn" onclick="goStep2()">Continue →</button>
+      <div class="divider">Already a member?</div>
+      <a href="login.html"><button class="btn btn-outline" style="margin-top:0">Sign In</button></a>
+    </div>
+
+    <!-- STEP 2: ROLE -->
+    <div class="step" id="step-2">
+      <div class="step-indicator">
+        <div class="step-dot done" id="dot-1b"></div>
+        <div class="step-dot active" id="dot-2b"></div>
+        <div class="step-dot" id="dot-3b"></div>
+      </div>
+      <h1 class="heading">Who are <em>you?</em></h1>
+      <p class="subheading">Step 2 of 3 — We personalise your dashboard based on this. You can always change it later.</p>
+      <div class="role-grid">
+        <label class="role-option" onclick="selectRole('coach',this)">
+          <input type="radio" name="role" value="coach">
+          <div class="role-icon">🎯</div>
+          <div class="role-text"><h4>I'm a Coach</h4><p>Sessions, methodology, frameworks and the pro pathway series</p></div>
+        </label>
+        <label class="role-option" onclick="selectRole('parent',this)">
+          <input type="radio" name="role" value="parent">
+          <div class="role-icon">👨‍👧</div>
+          <div class="role-text"><h4>I'm a Parent</h4><p>Development guides, ages & stages, sideline behaviour, academy etiquette</p></div>
+        </label>
+        <label class="role-option" onclick="selectRole('parentcoach',this)">
+          <input type="radio" name="role" value="parentcoach">
+          <div class="role-icon">⚽</div>
+          <div class="role-text"><h4>I'm a Parent & Coach</h4><p>Saturday sessions ready to go, WhatsApp templates, and both sets of content</p></div>
+        </label>
+      </div>
+      <div class="error" id="step2-error"></div>
+      <button class="btn" onclick="goStep3()">Continue to Payment →</button>
+      <button class="btn btn-outline" style="margin-top:0.5rem" onclick="goBack(1)">← Back</button>
+    </div>
+
+    <!-- STEP 3: PAYMENT -->
+    <div class="step" id="step-3">
+      <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+      </div>
+      <h1 class="heading">Start your <em>membership.</em></h1>
+      <p class="subheading">Step 3 of 3 — Secure payment via Stripe. Cancel anytime from your account.</p>
+      <div class="price-badge" style="width:100%;justify-content:space-between">
+        <div><div class="amount">£9.99</div><div class="per">Per month · billed monthly</div></div>
+        <div style="font-size:0.72rem;color:var(--gold);text-align:right">Full access<br>Instant</div>
+      </div>
+      <div id="card-element" style="background:var(--card);border:1px solid var(--border);padding:0.85rem 1rem;margin-top:1.2rem"></div>
+      <div class="error" id="step3-error"></div>
+      <button class="btn" id="pay-btn" onclick="handlePayment()">Pay £9.99 and Join →</button>
+      <div class="secure-badge">🔒 Secured by Stripe · Your card details are never stored</div>
+      <button class="btn btn-outline" style="margin-top:0.5rem" onclick="goBack(2)">← Back</button>
+      <p class="terms">By joining you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>. Your subscription renews automatically at £9.99/month. Cancel anytime from your account settings.</p>
+    </div>
+
+    <!-- LOADING -->
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p style="color:var(--muted);font-size:0.85rem">Setting up your account...</p>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="step" id="step-success">
+      <div class="success-icon">✅</div>
+      <h1 class="heading" style="text-align:center">You're <em>in.</em></h1>
+      <p class="subheading" style="text-align:center;margin-bottom:2rem">Welcome to the CKN Coaching Hub. Your account is active and your dashboard is ready.</p>
+      <a href="platform.html"><button class="btn" style="margin-top:0">Enter the Hub →</button></a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── CONFIG — Replace these with your real keys ───
+const SUPABASE_URL = 'https://pvieohrkgekyxwlwyfgb.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_cbLpmXRKSLHCAx5M_0qTmQ_NhIgm00r';
+const STRIPE_PUBLISHABLE_KEY = 'pk_live_51Su5iB4DfNNx3Oy0EQMAI2PHde3wW9mGB4no3ZruULHfgm6qaRGjBlvfviiP92GJlByu06mUI823vRVSixxX34bN00VhIlo126';
+const STRIPE_PRICE_ID = 'price_1TPcLF4DfNNx3OyOUJL17kOW'; // e.g. price_xxxxx from Stripe dashboard
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+const elements = stripe.elements();
+const cardElement = elements.create('card', {
+  style: {
+    base: {
+      color: '#F0EBE1',
+      fontFamily: "'DM Sans', sans-serif",
+      fontSmoothing: 'antialiased',
+      fontSize: '15px',
+      '::placeholder': { color: '#6A6460' }
+    },
+    invalid: { color: '#c44a3a', iconColor: '#c44a3a' }
+  }
+});
+cardElement.mount('#card-element');
+
+let selectedRole = null;
+let userData = {};
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.classList.add('show');
+}
+function clearError(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+function selectRole(role, el) {
+  selectedRole = role;
+  document.querySelectorAll('.role-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function goStep2() {
+  clearError('step1-error');
+  const fn = document.getElementById('firstname').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('password').value;
+  if (!fn) return showError('step1-error', 'Please enter your first name.');
+  if (!email || !email.includes('@')) return showError('step1-error', 'Please enter a valid email address.');
+  if (pass.length < 8) return showError('step1-error', 'Password must be at least 8 characters.');
+  userData = { firstname: fn, email, password: pass };
+  document.getElementById('step-1').classList.remove('active');
+  document.getElementById('step-2').classList.add('active');
+}
+
+function goStep3() {
+  clearError('step2-error');
+  if (!selectedRole) return showError('step2-error', 'Please select who you are.');
+  userData.role = selectedRole;
+  document.getElementById('step-2').classList.remove('active');
+  document.getElementById('step-3').classList.add('active');
+}
+
+function goBack(from) {
+  document.getElementById('step-' + (from + 1)).classList.remove('active');
+  document.getElementById('step-' + from).classList.add('active');
+}
+
+async function handlePayment() {
+  clearError('step3-error');
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    // 1. Create Supabase account
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: userData.email,
+      password: userData.password,
+      options: {
+        data: {
+          first_name: userData.firstname,
+          role: userData.role
+        }
+      }
+    });
+    if (authError) throw new Error(authError.message);
+
+    // 2. Create Stripe payment method
+    const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardElement,
+      billing_details: {
+        email: userData.email,
+        name: userData.firstname
+      }
+    });
+    if (pmError) throw new Error(pmError.message);
+
+    // 3. Call your Supabase Edge Function to create Stripe subscription
+    const { data: subData, error: subError } = await supabase.functions.invoke('create-subscription', {
+      body: {
+        email: userData.email,
+        paymentMethodId: paymentMethod.id,
+        priceId: STRIPE_PRICE_ID,
+        userId: authData.user.id,
+        firstName: userData.firstname,
+        role: userData.role
+      }
+    });
+    if (subError) throw new Error('Payment failed. Please try again.');
+
+    // 4. Handle 3D Secure if needed
+    if (subData.requiresAction) {
+      const { error: confirmError } = await stripe.confirmCardPayment(subData.clientSecret);
+      if (confirmError) throw new Error(confirmError.message);
+    }
+
+    // 5. Success
+    document.getElementById('step-3').classList.remove('active');
+    document.getElementById('step-success').classList.add('active');
+
+  } catch (err) {
+    showError('step3-error', err.message || 'Something went wrong. Please try again.');
+    btn.disabled = false;
+    btn.textContent = 'Pay £9.99 and Join →';
+  }
+}
+</script>
+</body>
+</html>

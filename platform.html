@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CKN Coaching Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#090909;--dark:#111111;--card:#161616;--card2:#1c1c1c;
+  --border:#242424;--border2:#2e2e2e;
+  --gold:#C4973A;--gold-light:#E2B560;--gold-dim:rgba(196,151,58,0.15);
+  --offwhite:#F0EBE1;--muted:#6A6460;--text:#D8D2C8;--subtle:#3a3835;
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;min-height:100vh}
+
+/* ─── SCREENS ─── */
+.screen{display:none;animation:fadeIn 0.4s ease forwards}
+.screen.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ─── ONBOARDING ─── */
+#onboarding{min-height:100vh;flex-direction:column;justify-content:center;align-items:center;padding:2rem;position:relative;overflow:hidden}
+#onboarding::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 70%,rgba(196,151,58,0.05) 0%,transparent 70%);pointer-events:none}
+.ob-logo{position:absolute;top:2rem;left:50%;transform:translateX(-50%);font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.12em;color:var(--offwhite)}
+.ob-logo span{color:var(--gold)}
+.ob-inner{max-width:760px;width:100%;text-align:center}
+.ob-tag{font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
+.ob-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:600;color:var(--offwhite);line-height:1.08;margin-bottom:0.8rem}
+.ob-headline em{font-style:italic;color:var(--gold)}
+.ob-sub{font-size:0.95rem;color:var(--muted);margin-bottom:3rem;max-width:46ch;margin-left:auto;margin-right:auto;line-height:1.8}
+.ob-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:2rem}
+.ob-card{background:var(--black);padding:2.2rem 1.8rem;cursor:pointer;transition:background 0.25s;text-align:left;position:relative}
+.ob-card:hover{background:var(--card)}
+.ob-card-icon{font-size:2rem;margin-bottom:1.2rem;display:block}
+.ob-card-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--offwhite);margin-bottom:0.5rem;line-height:1.2}
+.ob-card-desc{font-size:0.8rem;color:var(--muted);line-height:1.7}
+.ob-card-cta{display:inline-block;margin-top:1.2rem;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold)}
+.ob-card:hover .ob-card-cta{text-decoration:underline}
+.ob-footer{font-size:0.72rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-bottom:1px solid var(--border);padding-bottom:2px;transition:color 0.2s;display:inline-block}
+.ob-footer:hover{color:var(--text)}
+
+/* ─── PLATFORM SHELL ─── */
+.platform{flex:1;min-height:100vh;display:grid;grid-template-columns:240px 1fr;grid-template-rows:56px 1fr}
+
+/* ─── TOP BAR ─── */
+.topbar{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;padding:0 1.5rem 0 0;border-bottom:1px solid var(--border);background:rgba(9,9,9,0.98);position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:0;height:100%}
+.topbar-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.1em;color:var(--offwhite);padding:0 1.5rem;border-right:1px solid var(--border);height:100%;display:flex;align-items:center}
+.topbar-logo span{color:var(--gold)}
+.topbar-role{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);padding:0.3rem 0.9rem;border:1px solid rgba(196,151,58,0.25);margin-left:1.2rem}
+.topbar-right{display:flex;align-items:center;gap:1.2rem}
+.topbar-btn{font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:color 0.2s;background:none;border:none;font-family:'DM Sans',sans-serif}
+.topbar-btn:hover{color:var(--offwhite)}
+.topbar-btn.primary{background:var(--gold);color:var(--black);padding:0.45rem 1.1rem;font-weight:500;transition:background 0.2s}
+.topbar-btn.primary:hover{background:var(--gold-light)}
+
+/* ─── SIDEBAR ─── */
+.sidebar{border-right:1px solid var(--border);padding:1.5rem 0;display:flex;flex-direction:column;gap:0;overflow-y:auto;background:var(--dark)}
+.sidebar-section{padding:0 1rem;margin-bottom:1.5rem}
+.sidebar-label{font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--subtle);padding:0 0.5rem;margin-bottom:0.5rem;display:block}
+.nav-item{display:flex;align-items:center;gap:0.8rem;padding:0.65rem 0.8rem;cursor:pointer;border-radius:0;transition:background 0.15s,color 0.15s;color:var(--muted);font-size:0.83rem;border-left:2px solid transparent;margin-bottom:1px}
+.nav-item:hover{background:var(--card);color:var(--text)}
+.nav-item.active{background:var(--card);color:var(--offwhite);border-left-color:var(--gold)}
+.nav-item-icon{font-size:0.95rem;width:1.2rem;text-align:center;flex-shrink:0}
+.nav-item span{flex:1}
+.nav-badge{font-size:0.58rem;letter-spacing:0.1em;background:var(--gold-dim);color:var(--gold);padding:0.15rem 0.4rem;border:1px solid rgba(196,151,58,0.2)}
+.sidebar-divider{height:1px;background:var(--border);margin:0.5rem 1rem 1rem}
+
+/* ─── MAIN CONTENT ─── */
+.main{overflow-y:auto;padding:0}
+.page{display:none;padding:2.5rem;max-width:1000px;animation:fadeIn 0.3s ease forwards}
+.page.active{display:block}
+
+/* ─── PAGE ELEMENTS ─── */
+.page-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.page-tag{font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:600;color:var(--offwhite);line-height:1.1;margin-bottom:0.5rem}
+.page-title em{font-style:italic;color:var(--gold)}
+.page-sub{font-size:0.9rem;color:var(--muted);max-width:56ch;line-height:1.8}
+
+/* ─── FEATURED BLOCK ─── */
+.featured{background:var(--card);border:1px solid var(--border);padding:2rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.featured::after{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(196,151,58,0.06) 0%,transparent 70%);pointer-events:none}
+.featured-tag{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem}
+.featured h2{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:var(--offwhite);line-height:1.2;margin-bottom:0.8rem}
+.featured h2 em{font-style:italic;color:var(--gold)}
+.featured p{font-size:0.88rem;color:var(--muted);line-height:1.8;margin-bottom:1.5rem;max-width:60ch}
+.btn{display:inline-block;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;padding:0.7rem 1.6rem;cursor:pointer;transition:all 0.2s;border:none;font-family:'DM Sans',sans-serif}
+.btn-gold{background:var(--gold);color:var(--black)}
+.btn-gold:hover{background:var(--gold-light)}
+.btn-outline{background:none;color:var(--muted);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--muted);color:var(--text)}
+
+/* ─── GRIDS ─── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem}
+.grid-cols{display:grid;grid-template-columns:1.4fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+
+/* ─── CARDS ─── */
+.card{background:var(--card);padding:1.5rem}
+.card-tag{font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.7rem}
+.card h3{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--offwhite);margin-bottom:0.5rem}
+.card p{font-size:0.83rem;color:var(--muted);line-height:1.75}
+.card-footer{margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.card-link{font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);cursor:pointer}
+
+/* ─── MODULE LIST ─── */
+.module-list{display:flex;flex-direction:column}
+.module-row{display:flex;align-items:center;gap:1rem;padding:0.9rem 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s}
+.module-row:last-child{border-bottom:none}
+.module-row:hover{background:rgba(196,151,58,0.02);margin:0 -0.5rem;padding-left:0.5rem;padding-right:0.5rem}
+.module-num{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--border2);line-height:1;width:2rem;flex-shrink:0;text-align:center}
+.module-info{flex:1}
+.module-info h4{font-size:0.86rem;color:var(--offwhite);font-weight:400;margin-bottom:0.15rem}
+.module-info span{font-size:0.72rem;color:var(--muted);letter-spacing:0.03em}
+.module-tag{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.2rem 0.55rem;border:1px solid var(--border2);color:var(--muted);flex-shrink:0}
+.module-tag.gold{border-color:rgba(196,151,58,0.35);color:var(--gold)}
+.module-tag.green{border-color:rgba(100,180,100,0.3);color:#7dc47d}
+
+/* ─── PHASE CARDS ─── */
+.phase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem}
+.phase-card{background:var(--card);padding:1.8rem 1.5rem}
+.phase-age{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--gold);line-height:1;margin-bottom:0.6rem}
+.phase-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--offwhite);margin-bottom:0.6rem}
+.phase-desc{font-size:0.78rem;color:var(--muted);line-height:1.7}
+.phase-tags{margin-top:1rem;display:flex;flex-wrap:wrap;gap:0.3rem}
+.phase-tag{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(196,151,58,0.2);padding:0.15rem 0.4rem}
+
+/* ─── PROGRESS BAR ─── */
+.progress-block{margin-bottom:1rem}
+.progress-top{display:flex;justify-content:space-between;margin-bottom:0.4rem}
+.progress-top span{font-size:0.8rem;color:var(--text)}
+.progress-top small{font-size:0.72rem;color:var(--muted)}
+.progress-bar{height:2px;background:var(--border);position:relative}
+.progress-fill{height:100%;background:var(--gold);transition:width 1s ease}
+
+/* ─── QUOTE BLOCK ─── */
+.quote-block{border-left:2px solid var(--gold);padding:1.2rem 1.5rem;background:var(--card);margin-bottom:1.5rem}
+.quote-block blockquote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--offwhite);line-height:1.6;margin-bottom:0.5rem}
+.quote-block cite{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);font-style:normal}
+
+/* ─── STAT STRIP ─── */
+.stat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem}
+.stat-item{background:var(--card);padding:1.5rem}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--offwhite);line-height:1;margin-bottom:0.3rem}
+.stat-num span{color:var(--gold)}
+.stat-label{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+
+/* ─── AGE TABS ─── */
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1.5rem;gap:0}
+.tab{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.75rem 1.3rem;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:color 0.2s,border-color 0.2s;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ─── SESSION CARD ─── */
+.session-card{background:var(--card);border:1px solid var(--border);padding:1.5rem;margin-bottom:1px;cursor:pointer;transition:background 0.15s;display:flex;gap:1.5rem;align-items:flex-start}
+.session-card:hover{background:var(--card2)}
+.session-icon{font-size:1.5rem;flex-shrink:0;width:2.5rem;text-align:center;padding-top:0.1rem}
+.session-info{flex:1}
+.session-info h4{font-size:0.9rem;color:var(--offwhite);font-weight:400;margin-bottom:0.3rem}
+.session-info p{font-size:0.78rem;color:var(--muted);line-height:1.6}
+.session-meta{display:flex;gap:0.8rem;margin-top:0.6rem;flex-wrap:wrap}
+.session-meta-tag{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:0.15rem 0.45rem}
+.session-meta-tag.active{color:var(--gold);border-color:rgba(196,151,58,0.3)}
+
+/* ─── NOTICE ─── */
+.notice{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:0.83rem;color:var(--muted)}
+.notice strong{color:var(--offwhite);font-weight:400}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .platform{grid-template-columns:1fr;grid-template-rows:56px auto 1fr}
+  .sidebar{display:none}
+  .ob-cards{grid-template-columns:1fr}
+  .phase-grid{grid-template-columns:1fr 1fr}
+  .grid-2,.grid-3,.grid-cols,.stat-strip{grid-template-columns:1fr}
+  .page{padding:1.5rem}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://pvieohrkgekyxwlwyfgb.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_cbLpmXRKSLHCAx5M_0qTmQ_NhIgm00r';
+const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+_sb.auth.getSession().then(({ data: { session } }) => {
+  if (!session) window.location.href = 'login.html';
+});
+</script>
+</head>
+<body>
+
+<!-- ══════════════════ ONBOARDING ══════════════════ -->
+<div class="screen active" id="onboarding">
+  <div class="ob-logo">CKN <span>Hub</span></div>
+  <div class="ob-inner">
+    <p class="ob-tag">CKN Coaching Hub · Welcome</p>
+    <h1 class="ob-headline">How can we <em>help you?</em></h1>
+    <p class="ob-sub">Tell us who you are and we'll personalise everything for you. You can always switch later.</p>
+    <div class="ob-cards">
+      <div class="ob-card" onclick="enterPlatform('coach')">
+        <span class="ob-card-icon">🎯</span>
+        <div class="ob-card-title">I'm a Coach</div>
+        <div class="ob-card-desc">I run training sessions with a team or group and want methodology, sessions, and development frameworks built around the CKN Method.</div>
+        <div class="ob-card-cta">Enter as Coach →</div>
+      </div>
+      <div class="ob-card" onclick="enterPlatform('parent')">
+        <span class="ob-card-icon">👨‍👧</span>
+        <div class="ob-card-title">I'm a Parent</div>
+        <div class="ob-card-desc">My child plays football. I want to understand what good development looks like and how to support them the right way — at home and on the touchline.</div>
+        <div class="ob-card-cta">Enter as Parent →</div>
+      </div>
+      <div class="ob-card" onclick="enterPlatform('parentcoach')">
+        <span class="ob-card-icon">⚽</span>
+        <div class="ob-card-title">I'm a Parent & Coach</div>
+        <div class="ob-card-desc">I coach my child's team on weekends. I need both — practical sessions ready to use on Saturday, and how to support development at home.</div>
+        <div class="ob-card-cta">Enter as Parent & Coach →</div>
+      </div>
+    </div>
+    <span class="ob-footer" onclick="enterPlatform('coach')">Skip — show me everything</span>
+  </div>
+</div>
+
+<!-- ══════════════════ COACH PLATFORM ══════════════════ -->
+<div class="screen" id="platform-coach">
+  <div class="platform">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-logo">CKN <span>Hub</span></div>
+        <div class="topbar-role">Coach</div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" onclick="switchRole()">Switch role</button>
+        <button class="topbar-btn primary">My Account</button>
+      </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sidebar-section">
+        <span class="sidebar-label">Main</span>
+        <div class="nav-item active" onclick="showPage('coach','home',this)"><span class="nav-item-icon">⊞</span><span>Dashboard</span></div>
+        <div class="nav-item" onclick="showPage('coach','method',this)"><span class="nav-item-icon">◈</span><span>The CKN Method</span></div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Sessions</span>
+        <div class="nav-item" onclick="showPage('coach','sessions',this)"><span class="nav-item-icon">📋</span><span>Session Library</span></div>
+        <div class="nav-item" onclick="showPage('coach','frameworks',this)"><span class="nav-item-icon">📐</span><span>Dev Frameworks</span></div>
+        <div class="nav-item" onclick="showPage('coach','pathway',this)"><span class="nav-item-icon">🎯</span><span>Pro Pathway Series</span><div class="nav-badge">New</div></div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Learning</span>
+        <div class="nav-item" onclick="showPage('coach','education',this)"><span class="nav-item-icon">🎓</span><span>Coach Education</span></div>
+        <div class="nav-item" onclick="showPage('coach','tactics',this)"><span class="nav-item-icon">🧠</span><span>Tactical Breakdowns</span></div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">The Bigger Picture</span>
+        <div class="nav-item" onclick="showPage('coach','why',this)"><span class="nav-item-icon">🔥</span><span>Why Extra Work Matters</span><div class="nav-badge">New</div></div>
+        <div class="nav-item" onclick="showPage('coach','etiquette',this)"><span class="nav-item-icon">🏫</span><span>Academy Etiquette</span><div class="nav-badge">New</div></div>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- HOME -->
+      <div class="page active" id="coach-home">
+        <div class="page-header">
+          <p class="page-tag">Dashboard</p>
+          <h1 class="page-title">Good to have you, <em>Coach.</em></h1>
+          <p class="page-sub">Your hub is built around the CKN Method — technical-first development, sequenced by age, grounded in real coaching experience.</p>
+        </div>
+
+        <div class="stat-strip">
+          <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Development Phases</div></div>
+          <div class="stat-item"><div class="stat-num">24<span>+</span></div><div class="stat-label">Sessions in Library</div></div>
+          <div class="stat-item"><div class="stat-num">8<span>+</span></div><div class="stat-label">Coach Ed Modules</div></div>
+        </div>
+
+        <div class="featured">
+          <div class="featured-tag">This Week · Foundation Phase · Ages 8–10</div>
+          <h2>Touch before <em>everything.</em></h2>
+          <p>This week's focus is ball mastery for 8–10s. Both feet, close control, first touch in tight spaces. Three session plans ready — 45 min, 60 min, and a 30-min school version.</p>
+          <button class="btn btn-gold" onclick="showPage('coach','sessions',document.querySelector('#platform-coach .nav-item:nth-child(4)'))">Open Session Library</button>
+        </div>
+
+        <div class="grid-cols">
+          <div class="card">
+            <div class="card-tag">The Method — Quick View</div>
+            <h3>CKN Development Sequence</h3>
+            <div class="module-list" style="margin-top:1rem">
+              <div class="module-row" onclick="showPage('coach','method',null)">
+                <div class="module-num">1</div>
+                <div class="module-info"><h4>Technical Ability First</h4><span>Ball mastery · Both feet · Touch under pressure</span></div>
+                <div class="module-tag gold">Active</div>
+              </div>
+              <div class="module-row">
+                <div class="module-num">2</div>
+                <div class="module-info"><h4>Football Intelligence</h4><span>Decisions · Scanning · Game understanding</span></div>
+                <div class="module-tag">10+</div>
+              </div>
+              <div class="module-row">
+                <div class="module-num">3</div>
+                <div class="module-info"><h4>Positional Expression</h4><span>Identity · Structure · Character</span></div>
+                <div class="module-tag">13+</div>
+              </div>
+              <div class="module-row">
+                <div class="module-num">4</div>
+                <div class="module-info"><h4>Full Game Model</h4><span>In/out of possession · Transition</span></div>
+                <div class="module-tag">15+</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="card-link" onclick="showPage('coach','method',null)">View full method →</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1rem">
+            <div class="card">
+              <div class="card-tag">Your Progress</div>
+              <div class="progress-block" style="margin-top:0.5rem">
+                <div class="progress-top"><span>Session Library</span><small>3 / 24</small></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:12%"></div></div>
+              </div>
+              <div class="progress-block">
+                <div class="progress-top"><span>Pro Pathway Series</span><small>1 / 8</small></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:12%"></div></div>
+              </div>
+              <div class="progress-block">
+                <div class="progress-top"><span>Coach Education</span><small>0 / 6</small></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+              </div>
+            </div>
+            <div class="quote-block">
+              <blockquote>"The body develops on its own. The touch doesn't. That's what we build first."</blockquote>
+              <cite>Cecil Nyoni · Founder, CKN Foundation</cite>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THE METHOD -->
+      <div class="page" id="coach-method">
+        <div class="page-header">
+          <p class="page-tag">The CKN Method</p>
+          <h1 class="page-title">Technical first. <em>Always.</em></h1>
+          <p class="page-sub">The best environments have always known this — technique must be built early and deliberately. That standard belongs in every community, on every pitch.</p>
+        </div>
+
+        <div class="notice"><strong>How to use this:</strong> Each phase builds on the last. Don't rush through them. A player who spends two years in Foundation will go further than one who skips to Transition at 10.</div>
+
+        <div class="phase-grid">
+          <div class="phase-card">
+            <div class="phase-age">8–10</div>
+            <div class="phase-name">Foundation</div>
+            <div class="phase-desc">Touch before everything. Ball mastery, both feet, close control. The relationship between player and ball is built before any tactical concept is introduced. Every session IS the ball.</div>
+            <div class="phase-tags"><span class="phase-tag">Touch</span><span class="phase-tag">Control</span><span class="phase-tag">Both Feet</span><span class="phase-tag">1v1</span></div>
+          </div>
+          <div class="phase-card">
+            <div class="phase-age">10–13</div>
+            <div class="phase-name">Connection</div>
+            <div class="phase-desc">Technical ability applied with others. Small-sided situations. Reading the game, making decisions, understanding space. Football intelligence trained through repetition in real game scenarios.</div>
+            <div class="phase-tags"><span class="phase-tag">Decisions</span><span class="phase-tag">Awareness</span><span class="phase-tag">2v1</span><span class="phase-tag">3v2</span></div>
+          </div>
+          <div class="phase-card">
+            <div class="phase-age">13–15</div>
+            <div class="phase-name">Expression</div>
+            <div class="phase-desc">Players begin to understand their positional identity — not as a fixed role, but as a platform for their technical character to express itself within a team structure.</div>
+            <div class="phase-tags"><span class="phase-tag">Position</span><span class="phase-tag">Identity</span><span class="phase-tag">Structure</span><span class="phase-tag">Style</span></div>
+          </div>
+          <div class="phase-card" style="border-left:2px solid var(--gold)">
+            <div class="phase-age">15–17</div>
+            <div class="phase-name">Transition</div>
+            <div class="phase-desc">Full game model understanding. In and out of possession principles. Players have a clear technical identity and the football intelligence to adapt — ready for the next level.</div>
+            <div class="phase-tags"><span class="phase-tag">Game Model</span><span class="phase-tag">Pressing</span><span class="phase-tag">Principles</span></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-tag">Core Principle 1</div>
+            <h3>Technique before tactics</h3>
+            <p>Tactical understanding without technical ability creates players who know what to do but can't execute it. Always build the tool before teaching when to use it.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">Core Principle 2</div>
+            <h3>Intelligence through repetition</h3>
+            <p>Football intelligence isn't taught in team talks — it's trained through thousands of repetitions in game-realistic scenarios. Design sessions that force decisions, not just execution.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">Core Principle 3</div>
+            <h3>Both feet. No exceptions.</h3>
+            <p>A technically limited weak foot halves a player's options in every moment of the game. Build both feet from day one — it's not a drill, it's a non-negotiable standard.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">Core Principle 4</div>
+            <h3>The body follows the ball</h3>
+            <p>Physical development is not the starting point — it follows naturally. A player who loves the ball will run for it, fight for it, and develop the physical attributes the game demands.</p>
+          </div>
+        </div>
+
+        <div class="quote-block">
+          <blockquote>"The best academies in the world have always known this. It doesn't belong only to elite environments — it belongs in every community, for every player who deserves to be developed properly."</blockquote>
+          <cite>Cecil Nyoni · Founder, CKN Foundation</cite>
+        </div>
+      </div>
+
+      <!-- SESSIONS -->
+      <div class="page" id="coach-sessions">
+        <div class="page-header">
+          <p class="page-tag">Session Library</p>
+          <h1 class="page-title">Every session has a <em>why.</em></h1>
+          <p class="page-sub">Organised by development phase and age group. Each session includes the philosophy behind it — not just the drill.</p>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab(this,'tab-8')">Ages 8–10</button>
+          <button class="tab" onclick="switchTab(this,'tab-10')">Ages 10–13</button>
+          <button class="tab" onclick="switchTab(this,'tab-13')">Ages 13–15</button>
+          <button class="tab" onclick="switchTab(this,'tab-15')">Ages 15–17</button>
+        </div>
+
+        <div id="tab-8">
+          <div class="notice"><strong>Foundation Phase focus:</strong> Touch, both feet, close control. No positional work. No shape. Just the ball.</div>
+          <div class="session-card">
+            <div class="session-icon">⚽</div>
+            <div class="session-info">
+              <h4>Ball Mastery — Session 1</h4>
+              <p>Introduction to both feet. Stationary ball mastery moves progressing to slow movement. Individual focus throughout.</p>
+              <div class="session-meta">
+                <span class="session-meta-tag active">45 min</span>
+                <span class="session-meta-tag">Ages 8–10</span>
+                <span class="session-meta-tag">Individual</span>
+                <span class="session-meta-tag active">Foundation</span>
+              </div>
+            </div>
+          </div>
+          <div class="session-card">
+            <div class="session-icon">🎯</div>
+            <div class="session-info">
+              <h4>First Touch Under Pressure</h4>
+              <p>Receiving the ball in tight spaces, controlling with different parts of the foot. Pressure introduced gradually through small cones.</p>
+              <div class="session-meta">
+                <span class="session-meta-tag active">60 min</span>
+                <span class="session-meta-tag">Ages 8–10</span>
+                <span class="session-meta-tag">Pairs</span>
+                <span class="session-meta-tag active">Foundation</span>
+              </div>
+            </div>
+          </div>
+          <div class="session-card">
+            <div class="session-icon">📐</div>
+            <div class="session-info">
+              <h4>Dribbling in Small Spaces</h4>
+              <p>Close control, change of direction, shielding the ball. Building the habit of keeping the ball close under pressure.</p>
+              <div class="session-meta">
+                <span class="session-meta-tag active">30 min</span>
+                <span class="session-meta-tag">Ages 8–10</span>
+                <span class="session-meta-tag">School Version</span>
+                <span class="session-meta-tag active">Foundation</span>
+              </div>
+            </div>
+          </div>
+          <div class="session-card">
+            <div class="session-icon">🔄</div>
+            <div class="session-info">
+              <h4>Turning Techniques</h4>
+              <p>Cruyff, drag-back, inside cut. Both feet. Progressing from stationary to moving to with a passive defender.</p>
+              <div class="session-meta">
+                <span class="session-meta-tag active">45 min</span>
+                <span class="session-meta-tag">Ages 9–11</span>
+                <span class="session-meta-tag">Individual</span>
+                <span class="session-meta-tag active">Foundation</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-10" style="display:none">
+          <div class="notice"><strong>Connection Phase focus:</strong> Technical ability applied with others. Small-sided. Decisions, decisions, decisions.</div>
+          <div class="session-card">
+            <div class="session-icon">🧠</div>
+            <div class="session-info">
+              <h4>2v1 Combinations</h4>
+              <p>When to play, when to carry. Third-man runs. The beginning of reading your teammate's movement.</p>
+              <div class="session-meta">
+                <span class="session-meta-tag active">60 min</span>
+                <span class="session-meta-tag">Ages 10–12</span>
+                <span class="session-meta-tag">Small Groups</span>
+                <span class="session-meta-tag active">Connection</span>
+              </div>
+            </div>
+          </div>
+          <div class="session-card">
+            <div class="session-icon">👁️</div>
+            <div class="session-info">
+              <h4>Scanning Before Receiving</h4>
+              <p>Building the habit of looking before the ball arrives. Rondos, positional games, awareness drills.</p>
+              <div class="session-meta">
+                <span class="session-meta-tag active">45 min</span>
+                <span class="session-meta-tag">Ages 11–13</span>
+                <span class="session-meta-tag">Groups</span>
+                <span class="session-meta-tag active">Connection</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-13" style="display:none">
+          <div class="notice"><strong>Expression Phase focus:</strong> Technical character within positional structure. Who is this player?</div>
+          <div class="session-card">
+            <div class="session-icon">🎭</div>
+            <div class="session-info">
+              <h4>Position-Specific Technical Work</h4>
+              <p>Tailored technical demands by position. Strikers — hold-up and finish. Midfielders — receive, turn, carry. Defenders — stepping and recovering.</p>
+              <div class="session-meta">
+                <span class="session-meta-tag active">75 min</span>
+                <span class="session-meta-tag">Ages 13–15</span>
+                <span class="session-meta-tag">Position Groups</span>
+                <span class="session-meta-tag active">Expression</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-15" style="display:none">
+          <div class="notice"><strong>Transition Phase focus:</strong> Full game model. In and out of possession as a unit.</div>
+          <div class="session-card">
+            <div class="session-icon">⚡</div>
+            <div class="session-info">
+              <h4>Pressing Triggers & Transitions</h4>
+              <p>When to press, when to hold shape, moments of transition from attack to defence. Applied in 8v8 game context.</p>
+              <div class="session-meta">
+                <span class="session-meta-tag active">90 min</span>
+                <span class="session-meta-tag">Ages 15–17</span>
+                <span class="session-meta-tag">Full Group</span>
+                <span class="session-meta-tag active">Transition</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FRAMEWORKS -->
+      <div class="page" id="coach-frameworks">
+        <div class="page-header">
+          <p class="page-tag">Development Frameworks</p>
+          <h1 class="page-title">The documents we <em>actually use.</em></h1>
+          <p class="page-sub">Planning tools, seasonal structures, and player tracking from CKN's live programmes. Not built for this platform — the actual documents.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-tag">Planning</div>
+            <h3>Season Structure Template</h3>
+            <p>A full seasonal plan broken into phases — pre-season, early season, mid-season review, end of season. Aligned to the CKN development sequence.</p>
+            <div class="card-footer"><span class="card-link">Download →</span><span style="font-size:0.72rem;color:var(--muted)">PDF · 4 pages</span></div>
+          </div>
+          <div class="card">
+            <div class="card-tag">Player Development</div>
+            <h3>Individual Player Profile</h3>
+            <p>Track a player's technical, cognitive, and physical development across the season. The same format used in CKN's Sizinda programme.</p>
+            <div class="card-footer"><span class="card-link">Download →</span><span style="font-size:0.72rem;color:var(--muted)">PDF · 2 pages</span></div>
+          </div>
+          <div class="card">
+            <div class="card-tag">Weekly Planning</div>
+            <h3>Weekly Session Planner</h3>
+            <p>Plan your week's sessions with theme, age group, technical focus, and session notes. Printable or digital.</p>
+            <div class="card-footer"><span class="card-link">Download →</span><span style="font-size:0.72rem;color:var(--muted)">PDF · 1 page</span></div>
+          </div>
+          <div class="card">
+            <div class="card-tag">Parent Communication</div>
+            <h3>Parent Update Templates</h3>
+            <p>WhatsApp-ready message templates for after sessions, tournaments, and regular development updates. Warm, clear, professional.</p>
+            <div class="card-footer"><span class="card-link">Download →</span><span style="font-size:0.72rem;color:var(--muted)">6 templates</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRO PATHWAY -->
+      <div class="page" id="coach-pathway">
+        <div class="page-header">
+          <p class="page-tag">Pro Pathway Series</p>
+          <h1 class="page-title">What the professional game <em>actually looks for.</em></h1>
+          <p class="page-sub">Built from Cecil's career as a professional player and licensed scout. What separates a promising player from a signed one — explained from the inside.</p>
+        </div>
+        <div class="module-list">
+          <div class="module-row">
+            <div class="module-num">1</div>
+            <div class="module-info"><h4>What scouts watch in the first 5 minutes</h4><span>The non-negotiables scouts assess before anything tactical</span></div>
+            <div class="module-tag gold">New</div>
+          </div>
+          <div class="module-row">
+            <div class="module-num">2</div>
+            <div class="module-info"><h4>Technical standards at every level</h4><span>What's expected at grassroots, academy, and professional level — the real gap</span></div>
+            <div class="module-tag gold">New</div>
+          </div>
+          <div class="module-row">
+            <div class="module-num">3</div>
+            <div class="module-info"><h4>Why athletic players get overlooked</h4><span>Speed and strength without technique — why it doesn't convert</span></div>
+            <div class="module-tag">Coming</div>
+          </div>
+          <div class="module-row">
+            <div class="module-num">4</div>
+            <div class="module-info"><h4>The coachability signal</h4><span>What professional coaches and scouts mean when they say a player is "coachable"</span></div>
+            <div class="module-tag">Coming</div>
+          </div>
+          <div class="module-row">
+            <div class="module-num">5</div>
+            <div class="module-info"><h4>Developing a player profile</h4><span>How to document a player's development in a way that means something to a club</span></div>
+            <div class="module-tag">Coming</div>
+          </div>
+          <div class="module-row">
+            <div class="module-num">6</div>
+            <div class="module-info"><h4>The weak foot problem — and how to fix it</h4><span>Why most grassroots coaches leave it too late, and the method to address it</span></div>
+            <div class="module-tag">Coming</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="page" id="coach-education">
+        <div class="page-header">
+          <p class="page-tag">Coach Education</p>
+          <h1 class="page-title">Deepen your <em>understanding.</em></h1>
+          <p class="page-sub">Philosophy-led content that sits alongside your formal qualifications. Not a replacement for your badges — a complement to them.</p>
+        </div>
+        <div class="notice"><strong>Note:</strong> This content works best alongside formal coaching qualifications (FA, ZIFA, CAF). It extends the philosophy — it doesn't replace the licence.</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-tag">Philosophy</div>
+            <h3>Why technical-first works</h3>
+            <p>The research, the examples, and the real-world evidence behind prioritising technique over physicality in youth development.</p>
+            <div class="card-footer"><span class="card-link">Read →</span></div>
+          </div>
+          <div class="card">
+            <div class="card-tag">Practice Design</div>
+            <h3>Designing sessions that develop, not just entertain</h3>
+            <p>The difference between an activity kids enjoy and one that actually builds technical ability. How to design for development.</p>
+            <div class="card-footer"><span class="card-link">Read →</span></div>
+          </div>
+          <div class="card">
+            <div class="card-tag">Communication</div>
+            <h3>Coaching language that builds confidence</h3>
+            <p>The words you use shape how players see themselves. Practical guidance on feedback, correction, and encouragement at every age.</p>
+            <div class="card-footer"><span class="card-link">Read →</span></div>
+          </div>
+          <div class="card">
+            <div class="card-tag">Environment</div>
+            <h3>Creating a learning environment with no equipment</h3>
+            <p>What the best development environments have in common — and none of it requires a grass pitch or £10k of kit.</p>
+            <div class="card-footer"><span class="card-link">Read →</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TACTICS -->
+      <div class="page" id="coach-tactics">
+        <div class="page-header">
+          <p class="page-tag">Tactical Breakdowns</p>
+          <h1 class="page-title">The thinking behind <em>the game.</em></h1>
+          <p class="page-sub">Positional play, game model principles, pressing structures. Applied to youth development — not copied from elite football without context.</p>
+        </div>
+        <div class="module-list">
+          <div class="module-row">
+            <div class="module-num">→</div>
+            <div class="module-info"><h4>Positional play for grassroots coaches</h4><span>What it actually means — and how to introduce it at the right age</span></div>
+            <div class="module-tag gold">Available</div>
+          </div>
+          <div class="module-row">
+            <div class="module-num">→</div>
+            <div class="module-info"><h4>When to introduce a formation</h4><span>The age and development stage where shape becomes relevant — and why it's later than you think</span></div>
+            <div class="module-tag gold">Available</div>
+          </div>
+          <div class="module-row">
+            <div class="module-num">→</div>
+            <div class="module-info"><h4>Pressing — introduction for U15+</h4><span>Understanding pressing triggers without overwhelming young players with information</span></div>
+            <div class="module-tag">Coming</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHY EXTRA WORK (COACH) -->
+      <div class="page" id="coach-why">
+        <div class="page-header">
+          <p class="page-tag">The Bigger Picture</p>
+          <h1 class="page-title">Why extra work <em>changes everything.</em></h1>
+          <p class="page-sub">The gap between a player who trains once a week and one who works on their game every day isn't physical — it compounds. Understanding this is the difference between players who develop and players who plateau.</p>
+        </div>
+
+        <div class="featured">
+          <div class="featured-tag">The Core Truth</div>
+          <h2>Every year, your player should be <em>measurably better.</em></h2>
+          <p>Not bigger. Not faster. Better at the game. One aspect — one genuine improvement that wasn't there twelve months ago. That's the standard. A player who can't point to what they've improved in a year hasn't developed — they've just got older.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-tag">The Compound Effect</div>
+            <h3>Separating from peers starts early</h3>
+            <p>At 9, the difference between a player who does 10 minutes of ball work daily and one who doesn't is barely visible. At 13, it's a season ahead. At 16, it's a different level entirely. The work done at 9 didn't show up at 9 — it showed up at 16.</p>
+            <p style="margin-top:0.8rem">This is what coaches need to communicate to players and parents who can't yet see the return on investment.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">The First Team Reality</div>
+            <h3>They don't care how old you are</h3>
+            <p>When a player steps into a first team environment — whether at 16 or 18 — nobody adjusts their standards. The player opposite them wants to win that duel. The coach needs them to perform. Age is irrelevant the moment they're in that dressing room.</p>
+            <p style="margin-top:0.8rem">Preparing players for that reality starts in how you train them now — not just what you run, but the standards you hold them to.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">The Stagnation Problem</div>
+            <h3>Early breakthrough, early plateau</h3>
+            <p>The pattern is well-documented: players who rise quickly — through talent, physicality, or early maturity — often stop improving once the hard work catches up with them. By their mid-twenties, opponents have studied them, adapted to them, and the player who hasn't kept developing their game has nothing new to offer.</p>
+            <p style="margin-top:0.8rem">The player who works continuously — who adds something every year — is the one with a career at 28, not just a highlight reel at 19.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">The Opponent Problem</div>
+            <h3>They've watched you now</h3>
+            <p>A player who dominates their peers at 14 using the same strengths — pace, power, a favourite move — will find that at 15, those peers have adjusted. They know the trigger, they know the move, they know the weak foot. If the player hasn't added anything new, the advantage disappears.</p>
+            <p style="margin-top:0.8rem">This is why variety and continuous development matters. Your best players need to stay ahead of what people know about them.</p>
+          </div>
+        </div>
+
+        <div class="quote-block">
+          <blockquote>"Getting to the first team early is an achievement. Staying there is the work. The players who last are the ones who never stopped improving — not the ones who peaked first."</blockquote>
+          <cite>Cecil Nyoni · Former Professional · CKN Foundation</cite>
+        </div>
+
+        <div class="card" style="margin-bottom:1.5rem">
+          <div class="card-tag">For Coaches — How to Use This</div>
+          <h3>Building the culture of improvement</h3>
+          <div class="module-list" style="margin-top:1rem">
+            <div class="module-row">
+              <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+              <div class="module-info"><h4>Set one improvement target per player per season</h4><span>Named, specific, revisited every 6 weeks. Not a vague goal — a concrete skill.</span></div>
+            </div>
+            <div class="module-row">
+              <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+              <div class="module-info"><h4>Celebrate improvement, not just performance</h4><span>The player who improved their weak foot this season matters as much as the one who scored 10 goals.</span></div>
+            </div>
+            <div class="module-row">
+              <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+              <div class="module-info"><h4>Talk about the long game — directly</h4><span>Players at 12 and 13 can understand compounding effort. Don't assume they can't handle the honest conversation.</span></div>
+            </div>
+            <div class="module-row" style="border-bottom:none">
+              <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+              <div class="module-info"><h4>Make extra work feel like ownership, not obligation</h4><span>The player who chooses to put in more will always outwork the one who was told to. Create the environment where they want to.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACADEMY ETIQUETTE (COACH) -->
+      <div class="page" id="coach-etiquette">
+        <div class="page-header">
+          <p class="page-tag">Academy Etiquette</p>
+          <h1 class="page-title">Preparing players for a <em>different environment.</em></h1>
+          <p class="page-sub">Academy football operates differently from grassroots. Coaches who prepare their players for that transition — technically and behaviourally — give them a genuine advantage.</p>
+        </div>
+
+        <div class="notice"><strong>Why this matters at grassroots level:</strong> The habits, attitudes, and behaviours that get players noticed in trials and kept after signing start long before they arrive at an academy. You're building them now.</div>
+
+        <div class="grid-2">
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do — Punctuality</div>
+            <h3>Early is on time. On time is late.</h3>
+            <p>Academy environments run to a standard. A player who arrives at session start time is already behind the players who've been there warming up. Build this habit now — it signals professionalism before they've kicked a ball.</p>
+          </div>
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do — Body Language</div>
+            <h3>How you carry yourself is visible</h3>
+            <p>Coaches and scouts read body language constantly. A player who drops their head after a mistake, sulks when subbed, or disengages during a drill gets noticed — for the wrong reasons. Train the response to adversity, not just the technique.</p>
+          </div>
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do — Coachability</div>
+            <h3>Respond to instruction immediately</h3>
+            <p>In an academy, the expectation is that when a coach gives an instruction, the player applies it in the next rep. Not eventually. Not after arguing. The coachable player is the one who gets more investment — because coaching them isn't a battle.</p>
+          </div>
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do — Standards</div>
+            <h3>Hold their own standards</h3>
+            <p>Academy staff want to see players who correct themselves, who hold themselves to a level without being told. A player who shakes their head at their own sloppy pass — and then fixes it — is showing something coaches value deeply.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">Don't — Parental Interference</div>
+            <h3>Never let parents speak for them</h3>
+            <p>A player who has a parent advocate for them at every juncture sends a signal that they can't handle the environment independently. Academy staff notice when a player can't navigate a conversation with a coach without a parent present.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">Don't — Entitlement</div>
+            <h3>No one is owed anything</h3>
+            <p>Past performance, reputation, or who their parent knows doesn't carry weight in a professional environment. Every session is an audition. Players who operate with entitlement — arriving expecting to be praised — are replaced by players who arrive hungry.</p>
+          </div>
+        </div>
+
+        <div class="quote-block">
+          <blockquote>"In professional football, your talent gets you in the door. Your attitude determines how long you stay."</blockquote>
+          <cite>Cecil Nyoni · Former Professional · CKN Foundation</cite>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+<div class="screen" id="platform-parent">
+  <div class="platform">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-logo">CKN <span>Hub</span></div>
+        <div class="topbar-role">Parent</div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" onclick="switchRole()">Switch role</button>
+        <button class="topbar-btn primary">My Account</button>
+      </div>
+    </header>
+    <nav class="sidebar">
+      <div class="sidebar-section">
+        <span class="sidebar-label">Main</span>
+        <div class="nav-item active" onclick="showPage('parent','home',this)"><span class="nav-item-icon">⊞</span><span>Dashboard</span></div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Understanding</span>
+        <div class="nav-item" onclick="showPage('parent','development',this)"><span class="nav-item-icon">📈</span><span>What Good Looks Like</span></div>
+        <div class="nav-item" onclick="showPage('parent','ages',this)"><span class="nav-item-icon">🗓️</span><span>Ages & Stages</span></div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Supporting</span>
+        <div class="nav-item" onclick="showPage('parent','athome',this)"><span class="nav-item-icon">🏠</span><span>At Home</span></div>
+        <div class="nav-item" onclick="showPage('parent','sideline',this)"><span class="nav-item-icon">💬</span><span>On the Sideline</span></div>
+        <div class="nav-item" onclick="showPage('parent','conversation',this)"><span class="nav-item-icon">🚗</span><span>The Car Ride Home</span></div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">The Bigger Picture</span>
+        <div class="nav-item" onclick="showPage('parent','why',this)"><span class="nav-item-icon">🔥</span><span>Why It Matters</span><div class="nav-badge">New</div></div>
+        <div class="nav-item" onclick="showPage('parent','etiquette',this)"><span class="nav-item-icon">🏫</span><span>Academy Etiquette</span><div class="nav-badge">New</div></div>
+      </div>
+    </nav>
+    <main class="main">
+
+      <!-- PARENT HOME -->
+      <div class="page active" id="parent-home">
+        <div class="page-header">
+          <p class="page-tag">Welcome</p>
+          <h1 class="page-title">Supporting your child <em>the right way.</em></h1>
+          <p class="page-sub">You don't need to coach to make a difference. Understanding what good development looks like is the most valuable thing a football parent can do.</p>
+        </div>
+        <div class="featured">
+          <div class="featured-tag">Start Here</div>
+          <h2>What does <em>good development</em> actually look like?</h2>
+          <p>Most parents measure progress by goals scored or minutes played. But the real signs of development are in the touch, the decisions, the confidence on the ball. This guide explains what to actually look for — at every age.</p>
+          <button class="btn btn-gold" onclick="showPage('parent','development',null)">Read the Parent Guide</button>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-tag">Ages 8–12</div>
+            <h3>What to focus on now</h3>
+            <p>At this age the most important thing is their relationship with the ball. Both feet. Confidence. Enjoyment. Winning matters less than you think.</p>
+            <div class="card-footer"><span class="card-link" onclick="showPage('parent','ages',null)">Read more →</span></div>
+          </div>
+          <div class="card">
+            <div class="card-tag">At Home</div>
+            <h3>10 minutes a day</h3>
+            <p>You don't need a pitch. A wall, a small space, and a ball is enough. Simple daily habits that reinforce what they're learning — without pressure.</p>
+            <div class="card-footer"><span class="card-link" onclick="showPage('parent','athome',null)">See the habits →</span></div>
+          </div>
+          <div class="card">
+            <div class="card-tag">The Conversation</div>
+            <h3>After the game</h3>
+            <p>The car journey home is one of the most influential moments in a young player's development. What you say — and don't say — matters enormously.</p>
+            <div class="card-footer"><span class="card-link" onclick="showPage('parent','conversation',null)">Read the guide →</span></div>
+          </div>
+        </div>
+        <div class="quote-block">
+          <blockquote>"The most important thing a parent can do is let them love the game first. Everything else follows from that."</blockquote>
+          <cite>Cecil Nyoni · Founder, CKN Foundation</cite>
+        </div>
+      </div>
+
+      <!-- DEVELOPMENT -->
+      <div class="page" id="parent-development">
+        <div class="page-header">
+          <p class="page-tag">Understanding Development</p>
+          <h1 class="page-title">What good <em>actually looks like.</em></h1>
+          <p class="page-sub">The things that matter most in youth development are rarely the ones that get noticed on a Saturday.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-tag">What to look for</div>
+            <h3>Signs of real progress</h3>
+            <p>Is your child more confident with the ball under pressure? Are they using their weaker foot more naturally? Are they making quicker decisions? These are the signs — not the scoreline.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">What to ignore</div>
+            <h3>What doesn't matter yet</h3>
+            <p>Results, positions, minutes played, physical size compared to others. At 8–12, none of these are meaningful indicators of development potential. Comparing your child to others at this age helps no one.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">The Long Game</div>
+            <h3>Why it takes time</h3>
+            <p>Technical ability — genuine, reliable technique — takes thousands of repetitions. A player who develops slowly but properly at 10 will overtake a player who peaked physically at 12. Be patient with the process.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">Your Role</div>
+            <h3>What parents can provide</h3>
+            <p>Stability. Encouragement without pressure. A safe environment to fail. Getting them to training on time and in good headspace. These are the most valuable contributions you can make.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AGES -->
+      <div class="page" id="parent-ages">
+        <div class="page-header">
+          <p class="page-tag">Ages & Stages</p>
+          <h1 class="page-title">What's normal <em>at every age.</em></h1>
+          <p class="page-sub">Knowing what to expect at each stage helps you support your child — and stops you worrying about the wrong things.</p>
+        </div>
+        <div class="module-list">
+          <div class="module-row" style="padding:1.2rem 0;align-items:flex-start">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold);line-height:1;width:3rem;flex-shrink:0;padding-top:0.1rem">8</div>
+            <div class="module-info"><h4 style="font-size:0.92rem;margin-bottom:0.3rem">Foundation Years — Fall in love with the ball</h4><span style="font-size:0.82rem;line-height:1.7;display:block;color:var(--muted)">This is the most important stage. Not tactically — emotionally. A child who loves the ball at 8 will work on it alone at 12. Encourage play, not performance.</span></div>
+          </div>
+          <div class="module-row" style="padding:1.2rem 0;align-items:flex-start">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold);line-height:1;width:3rem;flex-shrink:0;padding-top:0.1rem">10</div>
+            <div class="module-info"><h4 style="font-size:0.92rem;margin-bottom:0.3rem">Starting to think about the game</h4><span style="font-size:0.82rem;line-height:1.7;display:block;color:var(--muted)">They're beginning to read situations, understand teammates, make decisions. Encourage curiosity about the game — ask them what they noticed, not what they scored.</span></div>
+          </div>
+          <div class="module-row" style="padding:1.2rem 0;align-items:flex-start">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold);line-height:1;width:3rem;flex-shrink:0;padding-top:0.1rem">13</div>
+            <div class="module-info"><h4 style="font-size:0.92rem;margin-bottom:0.3rem">Finding their identity</h4><span style="font-size:0.82rem;line-height:1.7;display:block;color:var(--muted)">They're developing a sense of what kind of player they are. Support it. Don't project. A child who is told they should be a striker when they feel like a midfielder loses something important.</span></div>
+          </div>
+          <div class="module-row" style="padding:1.2rem 0;align-items:flex-start;border-bottom:none">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold);line-height:1;width:3rem;flex-shrink:0;padding-top:0.1rem">15</div>
+            <div class="module-info"><h4 style="font-size:0.92rem;margin-bottom:0.3rem">Serious years — commitment and resilience</h4><span style="font-size:0.82rem;line-height:1.7;display:block;color:var(--muted)">This is where dedication starts to separate players. Your role shifts — less encouragement about enjoyment, more support around resilience, setbacks, and long-term thinking.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AT HOME -->
+      <div class="page" id="parent-athome">
+        <div class="page-header">
+          <p class="page-tag">At Home</p>
+          <h1 class="page-title">10 minutes. <em>Every day.</em></h1>
+          <p class="page-sub">You don't need a pitch. A wall, a small space, and a ball. Simple daily habits that compound over years.</p>
+        </div>
+        <div class="notice"><strong>The most important thing:</strong> Don't make it feel like practice. Keep it fun, keep it short, let them lead it.</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-tag">Ages 8–10 · Daily</div>
+            <h3>Wall work — both feet</h3>
+            <p>Pass against a wall, receive with the right foot. Then with the left. 5 minutes each side. That's it. Over a year, that's hundreds of touches on both feet that nobody else is putting in.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">Ages 8–10 · Weekly</div>
+            <h3>Juggling — no targets</h3>
+            <p>Just juggling. No pressure about how many. The point is feel — the ball on different parts of the foot. Let them experiment.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">Ages 10–13 · Daily</div>
+            <h3>Small space dribbling</h3>
+            <p>Mark out a small square. Dribble inside it — changes of direction, turns, quick feet. Tight spaces build close control faster than open pitches.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">Any Age · Habit</div>
+            <h3>Watch football together</h3>
+            <p>Not just as spectators — ask them what they notice. Where is the space? Why did that pass work? Who moved to create it? Build the habit of watching with intention.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDELINE -->
+      <div class="page" id="parent-sideline">
+        <div class="page-header">
+          <p class="page-tag">On the Sideline</p>
+          <h1 class="page-title">The most powerful position <em>on the pitch.</em></h1>
+          <p class="page-sub">Research consistently shows that parental behaviour on the touchline is one of the biggest influences on a young player's enjoyment and development.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do this</div>
+            <h3>Positive presence</h3>
+            <p>Cheer effort. Celebrate good decisions, not just goals. Use your child's name positively. Let them know you enjoy watching them — regardless of the result.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">Avoid this</div>
+            <h3>Coaching from the touchline</h3>
+            <p>Even if you know football. Even if they're making the wrong decision. They're listening to two voices — the coach's and yours. When those conflict, they freeze. Trust the coach.</p>
+          </div>
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do this</div>
+            <h3>Let them problem-solve</h3>
+            <p>When they make a mistake, let the moment pass. They'll learn more from experiencing the consequence than from hearing your correction from 30 metres away.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">Avoid this</div>
+            <h3>Result focus</h3>
+            <p>Reacting visibly to goals, mistakes, and results teaches them that the result is what matters to you. At this age, it shouldn't be — and they need to know that clearly.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAR RIDE -->
+      <div class="page" id="parent-conversation">
+        <div class="page-header">
+          <p class="page-tag">The Car Ride Home</p>
+          <h1 class="page-title">The most important <em>10 minutes.</em></h1>
+          <p class="page-sub">What happens in the car after a game is one of the most influential moments in a young player's development. Use it well.</p>
+        </div>
+        <div class="quote-block">
+          <blockquote>"Many players look back and remember what their parents said after difficult games far more vividly than they remember the games themselves."</blockquote>
+          <cite>Cecil Nyoni · Founder, CKN Foundation</cite>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-tag">The Golden Rule</div>
+            <h3>Say nothing for 10 minutes</h3>
+            <p>Let them decompress. They've just competed. Their emotions are high. The best thing you can do in the first 10 minutes is be present without pressure.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">The Right Question</div>
+            <h3>"Did you enjoy it?"</h3>
+            <p>Not "how did you play?" Not "why didn't you score?" Not "what was the coach thinking?" Just — did you enjoy it. Let their answer guide the rest of the conversation.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">After a Bad Game</div>
+            <h3>Normalise the hard days</h3>
+            <p>Every player has bad games. Including professionals. Your reaction to their difficult days teaches them how to handle failure. Calm, perspective, and tomorrow-focused.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">After a Good Game</div>
+            <h3>Praise effort, not outcome</h3>
+            <p>"You worked really hard today" builds resilience. "You were the best player" builds anxiety about maintaining that status. The difference matters more than it seems.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHY IT MATTERS (PARENT) -->
+      <div class="page" id="parent-why">
+        <div class="page-header">
+          <p class="page-tag">The Bigger Picture</p>
+          <h1 class="page-title">Why the extra work <em>is worth it.</em></h1>
+          <p class="page-sub">It's hard to see the return when your child is 9. This is the honest explanation of why development done properly now changes what's possible later.</p>
+        </div>
+
+        <div class="featured">
+          <div class="featured-tag">The Annual Standard</div>
+          <h2>Every year, one thing should be <em>genuinely better.</em></h2>
+          <p>Not taller. Not faster. Actually better at the game. One skill, one habit, one aspect of their play that wasn't there twelve months ago. That's the bar. If you can't point to it, the year was wasted — and years at this age don't come back.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-tag">The Honest Truth</div>
+            <h3>The work done at 9 shows up at 16</h3>
+            <p>Right now you can't see the compound effect. The child doing 10 minutes of ball work daily doesn't look dramatically different from their teammates at 10. But by 14, 15, 16 — the gap is measurable. Those years of quiet work become visible all at once.</p>
+            <p style="margin-top:0.8rem">This is what makes it hard for parents to sustain. The return is delayed. But it is certain.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">First Team Reality</div>
+            <h3>Nobody adjusts for age</h3>
+            <p>When a player steps into senior football — whether at 16 or 18 — the environment doesn't accommodate them. The player opposite them on a Saturday wants to win that ball. The coach needs them to perform. Being young is not a protection.</p>
+            <p style="margin-top:0.8rem">Players who arrive there underprepared technically don't get time to catch up. The ones who've been building since 8 are ready for it.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">The Plateau Problem</div>
+            <h3>Why talent alone runs out</h3>
+            <p>Plenty of talented players have promising starts — and stall by their mid-twenties. They were the best in their group early, they stopped working because they didn't need to, and when their peers caught up, they had nothing new to offer.</p>
+            <p style="margin-top:0.8rem">The players with long careers are rarely the ones who peaked earliest. They're the ones who kept improving quietly, year after year.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">The Opponent Problem</div>
+            <h3>They've learned your child now</h3>
+            <p>A player who dominates at 12 using the same strengths — pace, a favourite move, their strong foot — will find at 13 that opponents have adjusted. They know what's coming. If your child hasn't added something new, the advantage disappears.</p>
+            <p style="margin-top:0.8rem">Continuous development isn't optional for serious players. It's how they stay ahead of people who've been watching them.</p>
+          </div>
+        </div>
+
+        <div class="quote-block">
+          <blockquote>"The players I saw go furthest weren't always the most talented at 12. They were the ones who still wanted to improve at 22. That hunger has to be built — it doesn't just appear."</blockquote>
+          <cite>Cecil Nyoni · Former Professional · CKN Foundation</cite>
+        </div>
+
+        <div class="card">
+          <div class="card-tag">What You Can Do</div>
+          <h3>Nurturing the drive without creating pressure</h3>
+          <div class="module-list" style="margin-top:1rem">
+            <div class="module-row">
+              <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+              <div class="module-info"><h4>Ask about improvement, not results</h4><span>"What did you get better at today?" lands differently from "did you win?"</span></div>
+            </div>
+            <div class="module-row">
+              <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+              <div class="module-info"><h4>Celebrate effort that isn't visible in a game</h4><span>The training they do alone, the weak foot they've been working on — these deserve more recognition than goals.</span></div>
+            </div>
+            <div class="module-row">
+              <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+              <div class="module-info"><h4>Let the desire be theirs</h4><span>Pushed players burn out. Players who chose to work hard — because they genuinely want to improve — go the distance.</span></div>
+            </div>
+            <div class="module-row" style="border-bottom:none">
+              <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+              <div class="module-info"><h4>Support the extra sessions without making them feel mandatory</h4><span>Make it available, make it easy, make it positive. Don't make it a condition of your approval.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACADEMY ETIQUETTE (PARENT) -->
+      <div class="page" id="parent-etiquette">
+        <div class="page-header">
+          <p class="page-tag">Academy Etiquette</p>
+          <h1 class="page-title">What academies notice <em>before they say anything.</em></h1>
+          <p class="page-sub">The behaviour, attitude, and habits that get young players kept — or released — start long before any formal assessment. Most parents don't know what's actually being watched.</p>
+        </div>
+
+        <div class="notice"><strong>A note on mums specifically:</strong> Academy staff consistently report that the most common issue in player trials isn't the player's ability — it's parental behaviour. This section is honest about what helps and what actively damages your child's chances.</div>
+
+        <div class="featured">
+          <div class="featured-tag">The Most Important Thing</div>
+          <h2>Your job is to <em>stay out of it.</em></h2>
+          <p>This is not about being unsupportive. It's about understanding that an academy environment is designed to assess whether your child can operate independently. Every time you intervene — to advocate, to explain, to question — you are inadvertently signalling that they can't handle it without you. That signal matters.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do — Before Sessions</div>
+            <h3>Arrive early, leave them to it</h3>
+            <p>Drop them with time to spare. Let them find the session themselves, greet the coaches themselves, warm up independently. The player who navigates arrival confidently is already showing something before the session starts.</p>
+          </div>
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do — During Sessions</div>
+            <h3>Watch quietly from a distance</h3>
+            <p>If you watch, watch without commentary. No encouragement from the side, no instructions, no reactions to decisions. You being there is support enough. The moment you become visible and vocal, you're a distraction — to your child and to the coaching staff's assessment.</p>
+          </div>
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do — After Sessions</div>
+            <h3>Ask how they felt — not what happened</h3>
+            <p>Let them process it first. "How did you feel in there?" is a different question from "why didn't they play you in the second half?" One opens them up. The other puts them in a position of defending decisions they didn't make.</p>
+          </div>
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do — Communication</div>
+            <h3>If you have a concern, raise it calmly and once</h3>
+            <p>If there's a genuine welfare concern, you have every right and responsibility to raise it. Do it directly with the appropriate staff member, calmly, once. Not via repeated messages, not via other parents, not in front of other players.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">Don't — Mums especially</div>
+            <h3>Don't speak to coaches about playing time</h3>
+            <p>This is the most common mistake and the one that does the most damage. Playing time decisions at academy level are developmental — they are not about fairness in the way school sports are. Questioning them signals to staff that your family doesn't understand the environment, and it puts your child in an impossible position.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">Don't — Social Pressure</div>
+            <h3>Don't compare your child to others publicly</h3>
+            <p>Comments about other players — in earshot of other parents, in group chats, anywhere — create a toxic environment your child has to live inside. Academy staff hear about it. Other parents talk. Your child knows. It reflects on them, not just on you.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">Don't — Pressure After Setbacks</div>
+            <h3>Don't debrief a difficult session the same night</h3>
+            <p>If your child had a hard session — made mistakes, was criticised, wasn't selected for something — the car ride home is not the time for analysis. They need space and safety first. The conversation, if needed, can wait until tomorrow and needs to start with how they're feeling, not what went wrong.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">Don't — Entitlement</div>
+            <h3>Don't let them believe they're owed anything</h3>
+            <p>The player who arrives at an academy believing their reputation precedes them, or that past performance guarantees future selection, is in for a shock. Every session is earned. Your child needs to know — from you — that the work starts fresh every single time.</p>
+          </div>
+        </div>
+
+        <div class="quote-block">
+          <blockquote>"In my experience, the players who struggled in professional environments rarely struggled because of ability. It was the environment around them — the expectations, the pressure, the sense of entitlement — that made the transition hard."</blockquote>
+          <cite>Cecil Nyoni · Former Professional · UEFA B Licensed Coach</cite>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══════════════════ PARENT-COACH PLATFORM ══════════════════ -->
+<div class="screen" id="platform-parentcoach">
+  <div class="platform">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-logo">CKN <span>Hub</span></div>
+        <div class="topbar-role">Parent & Coach</div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" onclick="switchRole()">Switch role</button>
+        <button class="topbar-btn primary">My Account</button>
+      </div>
+    </header>
+    <nav class="sidebar">
+      <div class="sidebar-section">
+        <span class="sidebar-label">Main</span>
+        <div class="nav-item active" onclick="showPage('parentcoach','home',this)"><span class="nav-item-icon">⊞</span><span>Dashboard</span></div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">This Saturday</span>
+        <div class="nav-item" onclick="showPage('parentcoach','saturday',this)"><span class="nav-item-icon">⚽</span><span>Ready Sessions</span><div class="nav-badge">3 New</div></div>
+        <div class="nav-item" onclick="showPage('parentcoach','whatsapp',this)"><span class="nav-item-icon">💬</span><span>WhatsApp Templates</span></div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Both Hats</span>
+        <div class="nav-item" onclick="showPage('parentcoach','coaching',this)"><span class="nav-item-icon">🎯</span><span>Coaching Your Child</span></div>
+        <div class="nav-item" onclick="showPage('parentcoach','sideline',this)"><span class="nav-item-icon">👁️</span><span>Parent Role</span></div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">The Bigger Picture</span>
+        <div class="nav-item" onclick="showPage('parentcoach','why',this)"><span class="nav-item-icon">🔥</span><span>Why Extra Work Matters</span><div class="nav-badge">New</div></div>
+        <div class="nav-item" onclick="showPage('parentcoach','etiquette',this)"><span class="nav-item-icon">🏫</span><span>Academy Etiquette</span><div class="nav-badge">New</div></div>
+      </div>
+    </nav>
+    <main class="main">
+
+      <!-- PC HOME -->
+      <div class="page active" id="parentcoach-home">
+        <div class="page-header">
+          <p class="page-tag">Dashboard</p>
+          <h1 class="page-title">Saturday sorted. <em>Every week.</em></h1>
+          <p class="page-sub">You're wearing two hats. Coach on the pitch, parent on the sideline. Here's everything for both — practical, ready to use, built around real development principles.</p>
+        </div>
+        <div class="featured">
+          <div class="featured-tag">This Saturday · Ages 8–10 · 60 minutes · No equipment beyond cones</div>
+          <h2>Ball mastery and <em>first touch.</em></h2>
+          <p>Three activities, full instructions, progressions included. Includes a one-paragraph WhatsApp update you can send to parents afterwards.</p>
+          <button class="btn btn-gold" onclick="showPage('parentcoach','saturday',null)">Get This Session</button>
+        </div>
+        <div class="grid-cols">
+          <div>
+            <div class="card" style="margin-bottom:1rem">
+              <div class="card-tag">The Two Roles</div>
+              <h3>Coach hat & parent hat</h3>
+              <div class="module-list" style="margin-top:1rem">
+                <div class="module-row" onclick="showPage('parentcoach','coaching',null)">
+                  <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+                  <div class="module-info"><h4>On the pitch: what to coach at this age</h4><span>Technical focus · Age-appropriate expectations</span></div>
+                  <div class="module-tag gold">Guide</div>
+                </div>
+                <div class="module-row" onclick="showPage('parentcoach','sideline',null)">
+                  <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+                  <div class="module-info"><h4>Off the pitch: the parent role</h4><span>What to say · What to avoid · Keeping it in perspective</span></div>
+                  <div class="module-tag gold">Guide</div>
+                </div>
+                <div class="module-row" onclick="showPage('parentcoach','whatsapp',null)">
+                  <div class="module-num" style="color:var(--gold);font-size:1rem">→</div>
+                  <div class="module-info"><h4>Parent communication templates</h4><span>WhatsApp-ready updates after sessions and games</span></div>
+                  <div class="module-tag gold">Templates</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1rem">
+            <div class="card">
+              <div class="card-tag">Most Used</div>
+              <div class="module-list">
+                <div class="module-row" style="padding:0.7rem 0">
+                  <div class="module-info"><h4 style="font-size:0.82rem">Session: Ball mastery 8–10</h4><span>45 min · No equipment</span></div>
+                </div>
+                <div class="module-row" style="padding:0.7rem 0">
+                  <div class="module-info"><h4 style="font-size:0.82rem">WhatsApp: Post-session update</h4><span>Template · 3 versions</span></div>
+                </div>
+                <div class="module-row" style="padding:0.7rem 0;border-bottom:none">
+                  <div class="module-info"><h4 style="font-size:0.82rem">Guide: After a bad game</h4><span>Parent + coach perspective</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="quote-block">
+              <blockquote>"When you're both the coach and the parent, knowing which hat you're wearing — and when to take it off — is the most important skill."</blockquote>
+              <cite>Cecil Nyoni · CKN Foundation</cite>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SATURDAY SESSIONS -->
+      <div class="page" id="parentcoach-saturday">
+        <div class="page-header">
+          <p class="page-tag">Ready Sessions</p>
+          <h1 class="page-title">Pick it up. <em>Run it Saturday.</em></h1>
+          <p class="page-sub">Each session is complete — warm-up, main activities, cool-down, and a parent update template. Built around the CKN Method.</p>
+        </div>
+        <div class="session-card">
+          <div class="session-icon">⚽</div>
+          <div class="session-info">
+            <h4>Ball Mastery — Both Feet · 60 minutes</h4>
+            <p>Three activities building from individual ball work to paired pressure. Every activity uses both feet. Full progressions and regressions included.</p>
+            <div class="session-meta">
+              <span class="session-meta-tag active">60 min</span>
+              <span class="session-meta-tag active">Ages 8–10</span>
+              <span class="session-meta-tag">Cones only</span>
+              <span class="session-meta-tag active">WhatsApp included</span>
+            </div>
+          </div>
+        </div>
+        <div class="session-card">
+          <div class="session-icon">🎯</div>
+          <div class="session-info">
+            <h4>First Touch & Turning · 45 minutes</h4>
+            <p>Receiving and turning in tight spaces. Cruyff, drag-back, inside cut — introduced progressively. Works with any number from 6 upwards.</p>
+            <div class="session-meta">
+              <span class="session-meta-tag active">45 min</span>
+              <span class="session-meta-tag active">Ages 9–11</span>
+              <span class="session-meta-tag">Cones + balls</span>
+              <span class="session-meta-tag active">WhatsApp included</span>
+            </div>
+          </div>
+        </div>
+        <div class="session-card">
+          <div class="session-icon">🔄</div>
+          <div class="session-info">
+            <h4>Dribbling in Small Spaces · 30 minutes</h4>
+            <p>The school version. Works in a hall, a car park, or a small patch of grass. Close control, change of direction, shielding.</p>
+            <div class="session-meta">
+              <span class="session-meta-tag active">30 min</span>
+              <span class="session-meta-tag active">Ages 8–10</span>
+              <span class="session-meta-tag">Any surface</span>
+              <span class="session-meta-tag active">Minimal space</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHATSAPP -->
+      <div class="page" id="parentcoach-whatsapp">
+        <div class="page-header">
+          <p class="page-tag">WhatsApp Templates</p>
+          <h1 class="page-title">Say the right thing. <em>Every time.</em></h1>
+          <p class="page-sub">Ready-to-send updates for parents. Warm, informative, and development-focused — not just scores and schedules.</p>
+        </div>
+        <div class="module-list">
+          <div class="module-row" style="padding:1.2rem 0;align-items:flex-start">
+            <div class="module-num" style="color:var(--gold);font-size:1rem;padding-top:0.2rem">↗</div>
+            <div class="module-info"><h4>Post-session update</h4><span style="display:block;margin-top:0.3rem;font-size:0.8rem;color:var(--muted);line-height:1.7">"Great session today. We focused on [topic] — you'll notice [child] working on [specific skill]. If they want to practise at home, [simple suggestion] for a few minutes is perfect."</span></div>
+            <div class="module-tag gold">Copy</div>
+          </div>
+          <div class="module-row" style="padding:1.2rem 0;align-items:flex-start">
+            <div class="module-num" style="color:var(--gold);font-size:1rem;padding-top:0.2rem">↗</div>
+            <div class="module-info"><h4>After a loss</h4><span style="display:block;margin-top:0.3rem;font-size:0.8rem;color:var(--muted);line-height:1.7">"Difficult result today but the effort and attitude were right. Results at this age aren't our measure — development is. They're learning. Be positive with them tonight."</span></div>
+            <div class="module-tag gold">Copy</div>
+          </div>
+          <div class="module-row" style="padding:1.2rem 0;align-items:flex-start">
+            <div class="module-num" style="color:var(--gold);font-size:1rem;padding-top:0.2rem">↗</div>
+            <div class="module-info"><h4>Tournament/match day prep</h4><span style="display:block;margin-top:0.3rem;font-size:0.8rem;color:var(--muted);line-height:1.7">"Tomorrow's about enjoyment and applying what we've been working on. Please keep the energy positive on the touchline — let them play and let them problem-solve."</span></div>
+            <div class="module-tag gold">Copy</div>
+          </div>
+          <div class="module-row" style="padding:1.2rem 0;align-items:flex-start;border-bottom:none">
+            <div class="module-num" style="color:var(--gold);font-size:1rem;padding-top:0.2rem">↗</div>
+            <div class="module-info"><h4>End of term update</h4><span style="display:block;margin-top:0.3rem;font-size:0.8rem;color:var(--muted);line-height:1.7">"As we break up, I want to share what I've seen develop this term — not results, but the things that actually matter in player development..."</span></div>
+            <div class="module-tag gold">Copy</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COACHING YOUR CHILD -->
+      <div class="page" id="parentcoach-coaching">
+        <div class="page-header">
+          <p class="page-tag">Coaching Your Child</p>
+          <h1 class="page-title">The coach hat. <em>How to wear it well.</em></h1>
+          <p class="page-sub">Coaching your own child is one of the most rewarding and most complicated things in youth football. Here's how to approach it.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-tag">The Separation</div>
+            <h3>Coach on the pitch, parent off it</h3>
+            <p>When you're coaching, you're the coach — to every player equally. Your child doesn't get more attention, more corrections, or more praise. Consistent standards build trust in the group.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">At Home</div>
+            <h3>Don't re-coach at home</h3>
+            <p>If they had a difficult session, don't analyse it in the kitchen. You've already been their coach today. At home, be their parent. Let it rest.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">What to Prioritise</div>
+            <h3>Technical work first, always</h3>
+            <p>When you design sessions for this age group, lead with ball mastery. Don't skip to tactics and shape because it looks more impressive. The touch is what matters.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">The Long View</div>
+            <h3>You are building a person, not a player</h3>
+            <p>Resilience, discipline, teamwork, handling failure. These come from how you coach, not from what you coach. Keep the bigger picture in mind — especially on the difficult days.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDELINE (PC) -->
+      <div class="page" id="parentcoach-sideline">
+        <div class="page-header">
+          <p class="page-tag">The Parent Role</p>
+          <h1 class="page-title">Off the pitch, <em>still influential.</em></h1>
+          <p class="page-sub">When you're not coaching — at other people's sessions, at games you're watching from the touchline — the parent hat goes back on. It works differently.</p>
+        </div>
+        <div class="quote-block">
+          <blockquote>"Your child needs to know that your love for them has nothing to do with how they played. That security is what lets them take risks, make mistakes, and actually develop."</blockquote>
+          <cite>Cecil Nyoni · CKN Foundation</cite>
+        </div>
+        <div class="grid-2">
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do this</div>
+            <h3>Be a calm presence</h3>
+            <p>Cheer effort. Use their name positively. Let them know you're glad to be there regardless of the result. That's the baseline — and it's more powerful than any touchline instruction.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">Avoid this</div>
+            <h3>Mixing the roles publicly</h3>
+            <p>Shouting coaching instructions when you're in the parent role confuses everyone — your child, the other coach, the other parents. Trust the coach on the pitch. You know what that trust means.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHY EXTRA WORK (PARENT-COACH) -->
+      <div class="page" id="parentcoach-why">
+        <div class="page-header">
+          <p class="page-tag">The Bigger Picture</p>
+          <h1 class="page-title">The conversation every player <em>needs to hear.</em></h1>
+          <p class="page-sub">As both a coach and a parent, you're in a unique position to have this conversation with your child. Done right, it's the most motivating thing you can give them.</p>
+        </div>
+
+        <div class="featured">
+          <div class="featured-tag">The Standard — Say This Clearly</div>
+          <h2>Every year, one thing should be <em>better than last year.</em></h2>
+          <p>This is the bar you set — not results, not team selection, not how many goals they scored. One genuine improvement. Named, specific, measurable. At the end of every season ask them: what improved? If neither of you can answer that, next year starts with a plan to fix it.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-tag">As Their Coach</div>
+            <h3>Build it into your sessions</h3>
+            <p>Give every player — including your child — a named individual target at the start of the season. Revisit it. Celebrate it when it improves. Make improvement visible in training so they can feel it before they see it in games.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">As Their Parent</div>
+            <h3>Talk about the long game at home</h3>
+            <p>Not to pressure them — to give them context. The players who peak at 14 and stall by 22 are the ones who never understood that the work has to continue even when you're already the best in your group. Help them see past Saturday.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">The First Team Reality</div>
+            <h3>No one adjusts for their age</h3>
+            <p>When they get into senior football, the opponent opposite them wants to win that duel regardless of how old your child is. The players who are ready for that — physically, technically, mentally — are the ones who've been building since 8, not the ones who coasted on natural ability.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">The Stagnation Warning</div>
+            <h3>Opponents learn your game</h3>
+            <p>A player who dominates at 13 using the same moves, the same patterns, the same strengths — finds at 14 that everyone knows how to stop them. If they haven't added anything new, the advantage is gone. This is the conversation to have before it happens, not after.</p>
+          </div>
+        </div>
+
+        <div class="quote-block">
+          <blockquote>"Getting to the first team early is an achievement. Staying there is the work. The players who last are the ones who never stopped improving — not the ones who peaked first."</blockquote>
+          <cite>Cecil Nyoni · Former Professional · CKN Foundation</cite>
+        </div>
+      </div>
+
+      <!-- ACADEMY ETIQUETTE (PARENT-COACH) -->
+      <div class="page" id="parentcoach-etiquette">
+        <div class="page-header">
+          <p class="page-tag">Academy Etiquette</p>
+          <h1 class="page-title">Two hats. <em>One set of standards.</em></h1>
+          <p class="page-sub">When your child enters a trial or academy environment, everything you've been building — in sessions and at home — is being assessed. So is how you behave as a parent.</p>
+        </div>
+
+        <div class="notice"><strong>The unique challenge:</strong> You know more about football than most parents in that environment. That knowledge can help your child — or work against them if it comes across as interference. Read both sides carefully.</div>
+
+        <div class="grid-2">
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Your Child — Do</div>
+            <h3>Punctuality, body language, coachability</h3>
+            <p>Early is on time. How they carry themselves after a mistake is being watched. When a coach gives an instruction, they apply it in the next rep — not eventually. These behaviours are as important as technical ability in a trial environment.</p>
+          </div>
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Your Child — Do</div>
+            <h3>Hold their own standards</h3>
+            <p>A player who corrects themselves — who reacts to their own sloppy pass with a shake of the head and then fixes it — signals self-awareness and high standards. Academy coaches invest more in players who hold themselves accountable.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">You as a Parent — Don't</div>
+            <h3>Don't be the football parent who knows too much</h3>
+            <p>You have a UEFA B licence. You see things most parents don't. That is not an invitation to share your observations with academy staff. In this environment, you are a parent — not a coach. Your expertise is irrelevant here and offering it signals that your child can't operate without your involvement.</p>
+          </div>
+          <div class="card" style="border-top:2px solid #c44a3a">
+            <div class="card-tag">Mums especially — Don't</div>
+            <h3>Playing time is not a welfare issue</h3>
+            <p>Academy staff consistently report that the most damaging parental behaviour is questioning playing time decisions — particularly from mothers who frame it as concern for their child. Selection decisions at this level are developmental assessments. Questioning them marks your family as one that doesn't understand the environment. Your child pays for that.</p>
+          </div>
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do — After Sessions</div>
+            <h3>Switch hats completely</h3>
+            <p>When they come out of a trial or academy session, you are a parent. Not a coach reviewing their performance. Ask how they felt. Let them lead. If they want to talk football, follow their lead. Don't debrief what you watched from the car park.</p>
+          </div>
+          <div class="card" style="border-top:2px solid var(--gold)">
+            <div class="card-tag">Do — The Culture at Home</div>
+            <h3>Prepare them before they get there</h3>
+            <p>Use your knowledge as a coach to prepare them — at home, in training, before the trial. Tell them what the environment will expect. Prepare them for the standards, the feedback style, the pace. That preparation is where your expertise belongs.</p>
+          </div>
+        </div>
+
+        <div class="quote-block">
+          <blockquote>"In professional football, your talent gets you in the door. Your attitude determines how long you stay. And the attitude starts at home — with what's expected, what's modelled, and what's rewarded."</blockquote>
+          <cite>Cecil Nyoni · Former Professional · UEFA B Licensed Coach</cite>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+function enterPlatform(role) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('platform-' + role).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function switchRole() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('onboarding').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showPage(role, page, navEl) {
+  const platform = document.getElementById('platform-' + role);
+  platform.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(role + '-' + page);
+  if (target) target.classList.add('active');
+  if (navEl) {
+    platform.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    navEl.classList.add('active');
+  }
+  platform.querySelector('.main').scrollTo(0,0);
+}
+
+function switchTab(btn, tabId) {
+  const container = btn.closest('.page');
+  container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  ['tab-8','tab-10','tab-13','tab-15'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = (id === tabId) ? 'block' : 'none';
+  });
+}
+
+// Animate progress bars on load
+setTimeout(() => {
+  document.querySelectorAll('.progress-fill').forEach(bar => {
+    const w = bar.style.width;
+    bar.style.width = '0%';
+    setTimeout(() => bar.style.width = w, 100);
+  });
+}, 300);
+</script>
+</body>
+</html>
